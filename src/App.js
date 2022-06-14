@@ -6,7 +6,6 @@ import NewBookForm from "./components/NewCategoryInput";
 import Container from "@mui/material/Container";
 import CategoryCard from "./components/CategoryCard";
 import { Box, Button, Typography, Divider } from "@mui/material";
-import NewCategoryInput from "./components/NewCategoryInput";
 import emptyIcon from "./assets/empty state.png";
 import Masonry from "@mui/lab/Masonry";
 import fireDb from "./firebase";
@@ -31,7 +30,7 @@ function App() {
     <div className="App">
       <BookContextProvider>
         <Container
-          maxWidth="xl"
+          maxWidth="lg"
           style={{
             marginTop: 30,
             marginBottom: 30,
@@ -59,11 +58,10 @@ function App() {
               <Typography color="#757575">
                 Start by creating a new category!
               </Typography>
-              <NewCategoryInput />
             </Box>
           ) : (
             <Box sx={{ paddingTop: "20px" }}>
-              <Masonry columns={1} spacing={1}>
+              <Masonry columns={2} spacing={1}>
                 {Object.keys(data).map((id, i) => {
                   return (
                     <Box key={i}>

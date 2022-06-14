@@ -10,6 +10,7 @@ const Navbar = () => {
       sx={{
         display: "flex",
         justifyContent: "space-between",
+        alignItems: "center",
         paddingY: "30px",
       }}
     >

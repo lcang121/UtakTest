@@ -1,14 +1,4 @@
 import fireDb from "../firebase";
-// import { useContext } from "react";
-// import { BookContext } from "../context/BookContext";
-
-const emptyCategory = {
-  categoryName: "",
-  product: "",
-  price: 0,
-  cost: 0,
-  stock: 0,
-};
 
 export const createCategory = (category) => {
   //   const [books] = useContext(BookContext);
@@ -52,9 +42,9 @@ export const removeCategory = (id) => {
   });
 };
 
-export const createProduct = (productInfo, categoryId, productId) => {
+export const updateProduct = (productInfo, categoryId) => {
   return (
-    fireDb.child(`Categories/${categoryId}/products/${productId}`).push(),
+    fireDb.child(`Categories/${categoryId}/products/`).set(productInfo),
     (err) => {
       if (err) {
         console.log(err);
@@ -64,35 +54,3 @@ export const createProduct = (productInfo, categoryId, productId) => {
     }
   );
 };
-
-export const editProduct = (productInfo, categoryId, productId) => {
-  return (
-    fireDb
-      .child(`Categories/${categoryId}/products/${productId}`)
-      .set(productInfo),
-    (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("success");
-      }
-    }
-  );
-};
-
-// export const updateTable = (categoryName, id) => {
-//   console.log(categoryName);
-//   //   const [books] = useContext(BookContext);
-//   return (
-//     fireDb.child(`Categories/${id}/products/${productName}`).set({
-//       categoryName: categoryName,
-//     }),
-//     (err) => {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         console.log("success");
-//       }
-//     }
-//   );
-// };

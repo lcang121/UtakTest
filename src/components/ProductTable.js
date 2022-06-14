@@ -1,31 +1,33 @@
-import MaterialTable from "@material-table/core";
-import { Typography, Button } from "@mui/material";
+import MaterialTable, {
+  MTableAction,
+  MTableToolbar,
+} from "@material-table/core";
+import { Typography, Button, Box, Paper } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import {
-  updateTable,
-  createProduct,
-  editProduct,
-} from "../Service/FirebaseServices";
+import { updateProduct } from "../Service/FirebaseServices";
 import { v4 as uuidv4 } from "uuid";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { forwardRef } from "react";
 
 const SELECTION_COLS = [
-  { field: "productName", title: "Product" },
-  { field: "productPrice", title: "Price" },
-  { field: "productCost", title: "Cost" },
-  { field: "productStocks", title: "Stocks" },
-];
-var EDITABLE_DATA = [
   {
-    id: "2",
-    productName: "Joe",
-    productPrice: "12",
-    productCost: "21",
-    productStocks: "112",
+    field: "productName",
+    title: "Product",
+    validate: (row) =>
+      (row.productName || "").length < 3
+        ? "Product must have at least 3 chars"
+        : true,
   },
+  {
+    field: "productPrice",
+    title: "Price",
+    type: "currency",
+  },
+  { field: "productCost", title: "Cost", type: "currency" },
+  { field: "productStocks", title: "Stocks", type: "numeric" },
 ];
 
-export default function ProductTable({ categoryData, categoryId }) {
+const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -39,49 +41,42 @@ export default function ProductTable({ categoryData, categoryId }) {
     }
   }, [categoryData]);
 
-  const handleRowAdd = (newData) => {
-    setData([newData]);
-    createProduct(newData, categoryId);
-  };
-
-  const handleRowEdit = (newData, productId) => {
-    setData([newData]);
-    editProduct(newData, categoryId, productId);
-  };
-
-  // Helper function
-  function getNewDataBulkEdit(changes, copyData) {
-    // key matches the column data id
-    const keys = Object.keys(changes);
-    for (let i = 0; i < keys.length; i++) {
-      if (changes[keys[i]] && changes[keys[i]].newData) {
-        // Find the data item with the same key in copyData[]
-        let targetData = copyData.find((el) => el.id === keys[i]);
-        if (targetData) {
-          let newTargetDataIndex = copyData.indexOf(targetData);
-          copyData[newTargetDataIndex] = changes[keys[i]].newData;
-        }
-      }
-    }
-    return copyData;
-  }
+  useEffect(() => {
+    updateProduct(data, categoryId);
+  }, [data]);
 
   return (
-    <>
-      <Button
-        onClick={() => {
-          console.log(EDITABLE_DATA);
-          handleRowAdd(EDITABLE_DATA);
-        }}
-      >
-        asdadasd
-      </Button>
+    <Box style={{ padding: "20px" }}>
       <MaterialTable
+        components={{
+          Toolbar: (props) => (
+            <div
+              style={{
+                height: "0px",
+              }}
+            >
+              <MTableToolbar {...props} />
+            </div>
+          ),
+          Action: (props) => {
+            if (
+              typeof props.action === typeof Function ||
+              props.action.tooltip !== "Add"
+            ) {
+              return <MTableAction {...props} />;
+            } else {
+              return <div ref={ref} onClick={props.action.onClick} />;
+            }
+          },
+          Container: (props) => <Paper {...props} elevation={0} />,
+        }}
         options={{
           paging: false,
           search: false,
           showTitle: false,
+          //   toolbar: false,
           toolbarButtonAlignment: "left",
+          actionsColumnIndex: -1,
         }}
         icons={{
           Add: () => <AddCircleIcon color="primary" fontSize="large" />,
@@ -94,29 +89,26 @@ export default function ProductTable({ categoryData, categoryId }) {
             console.log("Row editing cancelled"),
           onRowAdd: (newData) => {
             return new Promise((resolve, reject) => {
-              //   newData.id = uuidv4();
-              //   const myData = [...data, newData];
-              console.log(newData);
-              handleRowAdd(newData);
-              //   console.log(myData);
-              resolve();
+              setTimeout(() => {
+                newData.id = uuidv4();
+                setData([...data, newData]);
+                resolve();
+              }, 100);
             });
           },
           onRowUpdate: (newData, oldData) => {
             console.log(data);
             return new Promise((resolve, reject) => {
-              //   setTimeout(() => {
-              // const dataUpdate = [...data];
-              // // In dataUpdate, find target
-              // const target = dataUpdate.find(
-              //   (el) => el.id === oldData.tableData.id
-              // );
-              // const index = dataUpdate.indexOf(target);
-              // dataUpdate[index] = newData;
-              // setData([...dataUpdate]);
-              handleRowEdit(newData, data.id);
-              resolve();
-              //   }, 1000);
+              setTimeout(() => {
+                const dataUpdate = [...data];
+                const target = dataUpdate.find(
+                  (el) => el.id === oldData.tableData.id
+                );
+                const index = dataUpdate.indexOf(target);
+                dataUpdate[index] = newData;
+                setData([...dataUpdate]);
+                resolve();
+              }, 100);
             });
           },
           onRowDelete: (oldData) => {
@@ -130,11 +122,13 @@ export default function ProductTable({ categoryData, categoryId }) {
                 dataDelete.splice(index, 1);
                 setData([...dataDelete]);
                 resolve();
-              }, 1000);
+              }, 100);
             });
           },
         }}
       />
-    </>
+    </Box>
   );
-}
+});
+
+export default ProductTable;

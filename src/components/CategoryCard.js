@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, forwardRef } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Avatar,
@@ -53,6 +53,7 @@ const handleUpdateCategory = (categoryName, id) => {
 };
 
 export default function CategoryCard(props) {
+  const addActionRef = useRef();
   const categoryRef = useRef(null);
   const {
     MyRemoveCategory,
@@ -67,6 +68,12 @@ export default function CategoryCard(props) {
   const [updatedCategory, setUpdatedCategory] = useState(
     props.data.categoryName
   );
+  const handleKeyPress = (e) => {
+    console.log(e.key);
+    if (e.key === "Enter") {
+      return true;
+    } else return false;
+  };
 
   return (
     <Card>
@@ -101,10 +108,6 @@ export default function CategoryCard(props) {
               <ExpandMoreIcon />
             </ExpandMore>
           </Box>
-          {/* <CardHeader
-            title={props.data.categoryName}
-            subheader="September 14, 2016"
-          /> */}
           {isEditingMode ? (
             <OutlinedInput
               style={{ background: "#ffffff" }}
@@ -118,9 +121,16 @@ export default function CategoryCard(props) {
               onChange={(e) => {
                 setUpdatedCategory(e.target.value);
               }}
+              onKeyPress={(e) => {
+                if (handleKeyPress(e)) {
+                  handleUpdateCategory(updatedCategory, props.id);
+                  setIsEditingMode(false);
+                }
+              }}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
+                    type="form"
                     sx={{ p: "10px" }}
                     aria-label="save changes"
                     onClick={() => {
@@ -144,7 +154,7 @@ export default function CategoryCard(props) {
               }
             />
           ) : (
-            <Typography>{props.data.categoryName}</Typography>
+            <Typography variant="h5">{props.data.categoryName}</Typography>
           )}
           {/* <Button
             onClick={() => handleUpdateCategory(updatedCategory, props.id)}
@@ -162,7 +172,11 @@ export default function CategoryCard(props) {
               }}
             >
               <Box>
-                <SmallButton variant="contained" size="small">
+                <SmallButton
+                  onClick={() => addActionRef.current.click()}
+                  variant="contained"
+                  size="small"
+                >
                   Add Product
                 </SmallButton>
                 <SmallButton
@@ -190,8 +204,12 @@ export default function CategoryCard(props) {
         />
       </Box>
 
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <ProductTable categoryData={props.data} categoryId={props.id} />
+      <Collapse in={expanded} timeout="auto">
+        <ProductTable
+          categoryData={props.data}
+          categoryId={props.id}
+          ref={addActionRef}
+        />
       </Collapse>
     </Card>
   );
