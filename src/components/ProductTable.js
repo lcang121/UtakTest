@@ -1,7 +1,13 @@
 import MaterialTable from "@material-table/core";
 import { Typography, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { updateTable, createProduct } from "../Service/FirebaseServices";
+import {
+  updateTable,
+  createProduct,
+  editProduct,
+} from "../Service/FirebaseServices";
+import { v4 as uuidv4 } from "uuid";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const SELECTION_COLS = [
   { field: "productName", title: "Product" },
@@ -9,17 +15,9 @@ const SELECTION_COLS = [
   { field: "productCost", title: "Cost" },
   { field: "productStocks", title: "Stocks" },
 ];
-var EDITABLE_DATA = {
-  id: 2,
-  productName: "Joe",
-  productPrice: "12",
-  productCost: "21",
-  productStocks: "112",
-};
-
-var dummyData = [
+var EDITABLE_DATA = [
   {
-    id: 2,
+    id: "2",
     productName: "Joe",
     productPrice: "12",
     productCost: "21",
@@ -28,28 +26,27 @@ var dummyData = [
 ];
 
 export default function ProductTable({ categoryData, categoryId }) {
-  const [updatedData, setUpdatedData] = useState(categoryData);
+  const [data, setData] = useState([]);
+
   useEffect(() => {
-    setUpdatedData(categoryData);
-  }, []);
-
-  var productsArray = [];
-  Object.keys(updatedData.products).map((id, i) => {
-    return productsArray.push(updatedData.products[id]);
-  });
-  console.log(productsArray);
-
-  const [data, setData] = useState(productsArray);
-  console.log(data);
-
-  //   useEffect(() => {
-  //     createProduct("qweq", props.id);
-  //   }, []);
+    if (Object.keys(categoryData).length > 1) {
+      var productsArray = [];
+      console.log(Object.keys(categoryData.products).length);
+      Object.keys(categoryData.products).map((id, i) => {
+        return productsArray.push(categoryData.products[id]);
+      });
+      setData(productsArray);
+    }
+  }, [categoryData]);
 
   const handleRowAdd = (newData) => {
-    setData(newData);
-    console.log(newData);
+    setData([newData]);
     createProduct(newData, categoryId);
+  };
+
+  const handleRowEdit = (newData, productId) => {
+    setData([newData]);
+    editProduct(newData, categoryId, productId);
   };
 
   // Helper function
@@ -71,47 +68,55 @@ export default function ProductTable({ categoryData, categoryId }) {
 
   return (
     <>
-      <Button onClick={() => handleRowAdd(EDITABLE_DATA)}>asdadasd</Button>
+      <Button
+        onClick={() => {
+          console.log(EDITABLE_DATA);
+          handleRowAdd(EDITABLE_DATA);
+        }}
+      >
+        asdadasd
+      </Button>
       <MaterialTable
+        options={{
+          paging: false,
+          search: false,
+          showTitle: false,
+          toolbarButtonAlignment: "left",
+        }}
+        icons={{
+          Add: () => <AddCircleIcon color="primary" fontSize="large" />,
+        }}
         data={data}
         columns={SELECTION_COLS}
         editable={{
-          onBulkUpdate: (changes) => {
-            return new Promise((resolve, reject) => {
-              setTimeout(() => {
-                let copyData = [...data];
-                setData(getNewDataBulkEdit(changes, copyData));
-                resolve();
-              }, 1000);
-            });
-          },
           onRowAddCancelled: (rowData) => console.log("Row adding cancelled"),
           onRowUpdateCancelled: (rowData) =>
             console.log("Row editing cancelled"),
           onRowAdd: (newData) => {
             return new Promise((resolve, reject) => {
-              setTimeout(() => {
-                newData.id = "uuid-" + Math.random() * 10000000;
-                //   const myData = [...data, newData];
-                handleRowAdd(newData);
-                //   console.log(myData);
-                resolve();
-              }, 100);
+              //   newData.id = uuidv4();
+              //   const myData = [...data, newData];
+              console.log(newData);
+              handleRowAdd(newData);
+              //   console.log(myData);
+              resolve();
             });
           },
           onRowUpdate: (newData, oldData) => {
+            console.log(data);
             return new Promise((resolve, reject) => {
-              setTimeout(() => {
-                const dataUpdate = [...data];
-                // In dataUpdate, find target
-                const target = dataUpdate.find(
-                  (el) => el.id === oldData.tableData.id
-                );
-                const index = dataUpdate.indexOf(target);
-                dataUpdate[index] = newData;
-                setData([...dataUpdate]);
-                resolve();
-              }, 1000);
+              //   setTimeout(() => {
+              // const dataUpdate = [...data];
+              // // In dataUpdate, find target
+              // const target = dataUpdate.find(
+              //   (el) => el.id === oldData.tableData.id
+              // );
+              // const index = dataUpdate.indexOf(target);
+              // dataUpdate[index] = newData;
+              // setData([...dataUpdate]);
+              handleRowEdit(newData, data.id);
+              resolve();
+              //   }, 1000);
             });
           },
           onRowDelete: (oldData) => {

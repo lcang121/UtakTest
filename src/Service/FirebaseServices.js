@@ -52,11 +52,24 @@ export const removeCategory = (id) => {
   });
 };
 
-export const createProduct = (productInfo, categoryID) => {
-  console.log(productInfo);
-  //   const [books] = useContext(BookContext);
+export const createProduct = (productInfo, categoryId, productId) => {
   return (
-    fireDb.child(`Categories/${categoryID}/products/`).push(productInfo),
+    fireDb.child(`Categories/${categoryId}/products/${productId}`).push(),
+    (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("success");
+      }
+    }
+  );
+};
+
+export const editProduct = (productInfo, categoryId, productId) => {
+  return (
+    fireDb
+      .child(`Categories/${categoryId}/products/${productId}`)
+      .set(productInfo),
     (err) => {
       if (err) {
         console.log(err);
