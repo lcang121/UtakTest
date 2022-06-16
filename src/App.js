@@ -30,7 +30,7 @@ function App() {
     <div className="App">
       <BookContextProvider>
         <Container
-          maxWidth="lg"
+          maxWidth="xl"
           style={{
             marginTop: 30,
             marginBottom: 30,
@@ -61,7 +61,7 @@ function App() {
             </Box>
           ) : (
             <Box sx={{ paddingTop: "20px" }}>
-              <Masonry columns={2} spacing={1}>
+              <Masonry columns={1} spacing={1}>
                 {Object.keys(data).map((id, i) => {
                   return (
                     <Box key={i}>

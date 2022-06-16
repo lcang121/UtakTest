@@ -1,7 +1,6 @@
 import fireDb from "../firebase";
 
 export const createCategory = (category) => {
-  //   const [books] = useContext(BookContext);
   return (
     fireDb.child("Categories").push({
       categoryName: category,
@@ -32,7 +31,6 @@ export const updateCategory = (categoryName, id) => {
 };
 
 export const removeCategory = (id) => {
-  //   const [books] = useContext(BookContext);
   return fireDb.child(`Categories/${id}`).remove((err) => {
     if (err) {
       console.log(err);
@@ -43,6 +41,20 @@ export const removeCategory = (id) => {
 };
 
 export const updateProduct = (productInfo, categoryId) => {
+  console.log("pasok!");
+  return (
+    fireDb.child(`Categories/${categoryId}/products/`).set(productInfo),
+    (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("success");
+      }
+    }
+  );
+};
+
+export const updateProductChild = (productInfo, categoryId) => {
   return (
     fireDb.child(`Categories/${categoryId}/products/`).set(productInfo),
     (err) => {

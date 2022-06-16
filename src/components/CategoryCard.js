@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef } from "react";
+import React, { useState, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Avatar,
@@ -173,7 +173,10 @@ export default function CategoryCard(props) {
             >
               <Box>
                 <SmallButton
-                  onClick={() => addActionRef.current.click()}
+                  onClick={() => {
+                    setExpanded(true);
+                    addActionRef.current.click();
+                  }}
                   variant="contained"
                   size="small"
                 >
