@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { BookContext } from "../context/ThemeWrapper";
-import { Box, TextField, Button, IconButton } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, TextField, Button } from "@mui/material";
 import { createCategory } from "../Service/FirebaseServices";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const NewCategoryInput = () => {
   const [category, setCategory] = useState("");

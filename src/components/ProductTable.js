@@ -42,16 +42,6 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
     updateProduct([...dataUpdate], categoryId);
     setData([...dataUpdate]);
     setCurrentRowData([]);
-  };
-
-  const handleAddNewVariety = (varietyData, rowId) => {
-    const dataUpdate = [...data];
-    const target = dataUpdate.find((el) => el.id === rowId);
-    const index = dataUpdate.indexOf(target);
-    dataUpdate[index].variety = varietyData;
-    updateProduct([...dataUpdate], categoryId);
-    setData([...dataUpdate]);
-    setCurrentRowData([]);
     handleCloseDialog();
   };
 
@@ -75,7 +65,7 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
         actions={[
           (rowData) =>
             typeof rowData.variety != "undefined"
-              ? console.log(data)
+              ? null
               : {
                   icon: () => <AddCircleIcon />,
                   tooltip: "Add Variety",
@@ -257,7 +247,7 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
         openDialog={openDialog}
         closeDialog={handleCloseDialog}
         rowData={currentRowData}
-        handleAddNewVariety={handleAddNewVariety}
+        handleVarietyChange={handleVarietyChange}
         handleCloseDialog={handleCloseDialog}
       />
     </Box>

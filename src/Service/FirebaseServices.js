@@ -17,9 +17,7 @@ export const createCategory = (category) => {
 
 export const updateCategory = (categoryName, id) => {
   return (
-    fireDb.child(`Categories/${id}`).set({
-      categoryName: categoryName,
-    }),
+    fireDb.child(`Categories/${id}`).set(categoryName),
     (err) => {
       if (err) {
         console.log(err);
@@ -41,19 +39,6 @@ export const removeCategory = (id) => {
 };
 
 export const updateProduct = (productInfo, categoryId) => {
-  return (
-    fireDb.child(`Categories/${categoryId}/products/`).set(productInfo),
-    (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("success");
-      }
-    }
-  );
-};
-
-export const updateProductChild = (productInfo, categoryId) => {
   return (
     fireDb.child(`Categories/${categoryId}/products/`).set(productInfo),
     (err) => {

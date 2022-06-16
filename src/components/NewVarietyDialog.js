@@ -53,12 +53,11 @@ const DETAIL_COLS = [
 const NewVarietyDialog = ({
   openDialog,
   rowData,
-  handleAddNewVariety,
+  handleVarietyChange,
   handleCloseDialog,
 }) => {
   const addButtonRef = useRef();
   const [data, setData] = useState([]);
-  console.log(rowData);
 
   const handleClose = () => {
     setData([]);
@@ -66,8 +65,7 @@ const NewVarietyDialog = ({
   };
 
   const handleSubmit = () => {
-    console.log(data);
-    handleAddNewVariety(data, rowData.id);
+    handleVarietyChange(data, rowData.id);
     handleClose();
   };
 

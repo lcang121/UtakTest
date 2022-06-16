@@ -73,9 +73,6 @@ function App() {
             </Box>
           )}
         </Container>
-        {/* <Navbar />
-        <BookList />
-        <NewBookForm /> */}
       </BookContextProvider>
     </div>
   );

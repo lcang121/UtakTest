@@ -14,7 +14,7 @@ const Navbar = () => {
         paddingY: "30px",
       }}
     >
-      <Typography variant="h4">Restaurant Inventory Tracking System</Typography>
+      <Typography variant="h4">Inventory Tracking App</Typography>
       <NewCategoryInput />
     </Box>
   );

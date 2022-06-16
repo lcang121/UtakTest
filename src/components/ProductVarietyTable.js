@@ -51,23 +51,25 @@ const ProductVarietyTable = forwardRef(
     <button onClick={forceUpdate}>Force re-render</button>;
 
     useEffect(() => {
-      // if (typeof rowData.rowData.variety != "undefined") {
-      fireDb
-        .child(`Categories/${categoryId}/products/`)
-        .on("value", (snapshot) => {
-          if (snapshot.val() !== null) {
-            var updatedRowData = [...snapshot.val()];
-            const target = updatedRowData.find((el) => el.id === newRowData.id);
-            setData(target.variety);
-            return;
-          } else {
-            setData([]);
-          }
-        });
-      return () => {
-        setData([]);
-      };
-      // }
+      if (typeof rowData.rowData.variety != "undefined") {
+        fireDb
+          .child(`Categories/${categoryId}/products/`)
+          .on("value", (snapshot) => {
+            if (snapshot.val() !== null) {
+              var updatedRowData = [...snapshot.val()];
+              const target = updatedRowData.find(
+                (el) => el.id === newRowData.id
+              );
+              setData(target.variety);
+              return;
+            } else {
+              setData([]);
+            }
+          });
+        return () => {
+          setData([]);
+        };
+      }
     }, []);
 
     return (
@@ -75,7 +77,7 @@ const ProductVarietyTable = forwardRef(
         {typeof rowData.rowData.variety != "undefined" ? (
           <Box
             style={{
-              padding: "10px 10px 20px 50px",
+              padding: "10px 30px 20px 50px",
               backgroundColor: "#F2F4F7",
             }}
           >

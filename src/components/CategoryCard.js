@@ -6,25 +6,18 @@ import {
   Button,
   Card,
   CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
   Collapse,
   Divider,
   IconButton,
   InputAdornment,
   OutlinedInput,
-  TextField,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { updateCategory, removeCategory } from "../Service/FirebaseServices";
 import { useRemoveCategory } from "./ConfirmationDialog";
-import NewCategoryInput from "./NewCategoryInput";
-import { refType } from "@mui/utils";
 import ProductTable from "./ProductTable";
 
 const SmallButton = styled(Button)({
@@ -48,8 +41,10 @@ const handleRemoveCategory = (id) => {
   removeCategory(id);
 };
 
-const handleUpdateCategory = (categoryName, id) => {
-  updateCategory(categoryName, id);
+const handleUpdateCategory = (categoryName, id, propsData) => {
+  var dataUpdate = propsData;
+  dataUpdate.categoryName = categoryName;
+  updateCategory(dataUpdate, id);
 };
 
 export default function CategoryCard(props) {
@@ -115,7 +110,6 @@ export default function CategoryCard(props) {
               autoFocus
               onFocus={(e) => e.target.select()}
               id="contained-basic"
-              // label="contained"
               variant="contained"
               value={updatedCategory}
               onChange={(e) => {
@@ -123,7 +117,7 @@ export default function CategoryCard(props) {
               }}
               onKeyPress={(e) => {
                 if (handleKeyPress(e)) {
-                  handleUpdateCategory(updatedCategory, props.id);
+                  handleUpdateCategory(updatedCategory, props.id, props.data);
                   setIsEditingMode(false);
                 }
               }}
@@ -134,10 +128,13 @@ export default function CategoryCard(props) {
                     sx={{ p: "10px" }}
                     aria-label="save changes"
                     onClick={() => {
-                      handleUpdateCategory(updatedCategory, props.id);
+                      handleUpdateCategory(
+                        updatedCategory,
+                        props.id,
+                        props.data
+                      );
                       setIsEditingMode(false);
                     }}
-                    // onMouseDown={handleMouseDownPassword}
                   >
                     <CheckIcon />
                   </IconButton>
@@ -146,7 +143,6 @@ export default function CategoryCard(props) {
                     sx={{ p: "10px" }}
                     aria-label="undo changes"
                     onClick={() => setIsEditingMode(false)}
-                    // onMouseDown={handleMouseDownPassword}
                   >
                     <CloseIcon />
                   </IconButton>
@@ -156,11 +152,6 @@ export default function CategoryCard(props) {
           ) : (
             <Typography variant="h5">{props.data.categoryName}</Typography>
           )}
-          {/* <Button
-            onClick={() => handleUpdateCategory(updatedCategory, props.id)}
-          >
-            Submit Change
-          </Button> */}
         </Box>
         <CardHeader
           action={
