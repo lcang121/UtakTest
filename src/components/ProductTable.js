@@ -12,33 +12,72 @@ import ProductVarietyTable from "./ProductVarietyTable";
 import NewVarietyDialog from "./NewVarietyDialog";
 import fireDb from "../firebase";
 
-const SELECTION_COLS = [
-  {
-    field: "productName",
-    title: "Product",
-    validate: (row) =>
-      (row.productName || "").length === 0 ? "Product must have a name" : true,
-  },
-  {
-    field: "productPrice",
-    title: "Price",
-    type: "currency",
-    currencySetting: {
-      currencyCode: "php",
-    },
-  },
-  {
-    field: "productCost",
-    title: "Cost",
-    type: "currency",
-    currencySetting: {
-      currencyCode: "php",
-    },
-  },
-  { field: "productStocks", title: "Stocks", type: "numeric" },
-];
-
 const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
+  const SELECTION_COLS = [
+    {
+      field: "productName",
+      title: "Product",
+      validate: (row) =>
+        (row.productName || "").length === 0
+          ? "Product must have a name"
+          : true,
+    },
+    {
+      field: "productPrice",
+      title: "Price",
+      type: "currency",
+      currencySetting: {
+        currencyCode: "php",
+      },
+    },
+    {
+      field: "productCost",
+      title: "Cost",
+      type: "currency",
+      currencySetting: {
+        currencyCode: "php",
+      },
+    },
+    { field: "productStocks", title: "Stocks", type: "numeric" },
+  ];
+
+  const colscols = (rowData) => {
+    return [
+      {
+        field: "productName",
+        title: "Product",
+        validate: (row) =>
+          (row.productName || "").length === 0
+            ? "Product must have a name"
+            : true,
+      },
+      {
+        field: "productPrice",
+        title: "Price",
+        type: "currency",
+        hidden: typeof rowData.variety != "undefined" ? true : false,
+        currencySetting: {
+          currencyCode: "php",
+        },
+      },
+      {
+        field: "productCost",
+        title: "Cost",
+        type: "currency",
+        hidden: typeof rowData.variety != "undefined" ? true : false,
+        currencySetting: {
+          currencyCode: "php",
+        },
+      },
+      {
+        field: "productStocks",
+        title: "Stocks",
+        type: "numeric",
+        hidden: typeof rowData.variety != "undefined" ? true : false,
+      },
+    ];
+  };
+
   const tableRef = useRef(0);
   const addActionRefChild = useRef();
   const [data, setData] = useState([]);
@@ -65,7 +104,6 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
           if (snapshot.val() !== null) {
             var updatedRowData = [...snapshot.val()];
             // const target = updatedRowData.find((el) => el.id === newRowData.id);
-            console.log(updatedRowData);
             setData(updatedRowData);
           } else {
             setData([]);
@@ -115,32 +153,44 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
     setCurrentRowData([]);
   };
 
-  const handleOpenDialog = () => {};
-
-  const openNewVarietyDialog = (rowData) => {
-    console.log("wewewewew");
+  const handleAddNewVariety = (varietyData, rowId) => {
+    const dataUpdate = [...data];
+    const target = dataUpdate.find((el) => el.id === rowId);
+    const index = dataUpdate.indexOf(target);
+    dataUpdate[index].variety = varietyData;
+    updateProduct([...dataUpdate], categoryId);
+    setData([...dataUpdate]);
+    setOpenDialog(false);
+    setCurrentRowData([]);
+    window.location.reload();
   };
+
+  const handleOpenDialog = () => {};
 
   const handleSetCurrentRowData = (rowData) => {
     setCurrentRowData(rowData);
   };
+
   return (
     <Box style={{ padding: "20px" }}>
       <MaterialTable
         tableRef={tableRef}
         actions={[
-          {
-            icon: () => <AddCircleIcon />,
-            tooltip: "Add Variety",
-            onClick: (event, rowData) => {
-              {
-                typeof rowData.variety != "undefined"
-                  ? addActionRefChild.current.click() // check if variety obj exists
-                  : handleSetCurrentRowData(rowData);
-              }
-              //   setCurrentRowData([]);
-            },
-          },
+          (rowData) =>
+            typeof rowData.variety != "undefined"
+              ? console.log(data)
+              : {
+                  icon: () => <AddCircleIcon />,
+                  tooltip: "Add Variety",
+                  onClick: (event, rowData) => {
+                    {
+                      console.log(data);
+                      typeof rowData.variety != "undefined"
+                        ? addActionRefChild.current.click() // check if variety obj exists
+                        : handleSetCurrentRowData(rowData);
+                    }
+                  },
+                },
         ]}
         components={{
           Toolbar: (props) => (
@@ -165,14 +215,101 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
           Container: (props) => <Paper {...props} elevation={0} />,
         }}
         options={{
+          actionsCellStyle: {
+            display: "flex",
+            height: "60px",
+            justifyContent: "center",
+          },
           paging: false,
           search: false,
           showTitle: false,
           toolbarButtonAlignment: "left",
           actionsColumnIndex: -1,
+          rowStyle: {
+            backgroundColor: "#D0D5DD",
+            borderTop: "10px solid white",
+          },
         }}
         data={data}
-        columns={SELECTION_COLS}
+        columns={[
+          {
+            field: "productName",
+            title: "Product",
+            validate: (row) =>
+              (row.productName || "").length === 0
+                ? "Product must have a name"
+                : true,
+          },
+          {
+            field: "productPrice",
+            title: "Price",
+            type: "currency",
+            currencySetting: {
+              currencyCode: "php",
+            },
+            cellStyle: (data, rowData) => {
+              if (typeof rowData != "undefined") {
+                if (typeof rowData.variety != "undefined") {
+                  return { color: "#D0D5DD" };
+                } else {
+                  return { color: "black" };
+                }
+              }
+            },
+          },
+          {
+            field: "productCost",
+            title: "Cost",
+            type: "currency",
+            currencySetting: {
+              currencyCode: "php",
+            },
+            cellStyle: (data, rowData) => {
+              if (typeof rowData != "undefined") {
+                if (typeof rowData.variety != "undefined") {
+                  return { color: "#D0D5DD" };
+                } else {
+                  return { color: "black" };
+                }
+              }
+            },
+          },
+          {
+            field: "productStocks",
+            title: "Stocks",
+            type: "numeric",
+            cellStyle: (data, rowData) => {
+              if (typeof rowData != "undefined") {
+                if (typeof rowData.variety != "undefined") {
+                  return { color: "#D0D5DD" };
+                } else {
+                  return { color: "black" };
+                }
+              }
+            },
+          },
+        ]}
+        //   detailPanel={[
+        //     (rowData) => ({
+        //       // typeof rowData.variety != "undefined"?
+
+        //       icon: typeof rowData.variety != "undefined" ? null : () => null,
+        //       // openIcon: () => null,
+        //       disabled: typeof rowData.variety != "undefined" ? null : () => null,
+        //       render: (rowData) => {
+        //         // rowData is now updated, so changes took place
+        //         return (
+        //           <ProductVarietyTable
+        //             rowData={rowData}
+        //             handleVarietyChange={handleVarietyChange}
+        //             categoryId={categoryId}
+        //             ref={addActionRefChild}
+        //           />
+        //         );
+        //       },
+        //     }),
+        //   ]}
+
         editable={{
           onRowAddCancelled: (rowData) => console.log("Row adding cancelled"),
           onRowUpdateCancelled: (rowData) =>
@@ -229,8 +366,6 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
 
         // detailPanel={[
         //   {
-        //     // icon: () => null,
-        //     // openIcon: () => null,
 
         //     disabled: false,
         //     defaultExpanded: true,
@@ -254,8 +389,11 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
 
         detailPanel={[
           (rowData) => ({
-            disabled: false,
-            defaultExpanded: true,
+            // typeof rowData.variety != "undefined"?
+
+            icon: typeof rowData.variety != "undefined" ? null : () => null,
+            // openIcon: () => null,
+            disabled: typeof rowData.variety != "undefined" ? null : () => null,
             render: (rowData) => {
               // rowData is now updated, so changes took place
               return (
@@ -275,6 +413,7 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
         <NewVarietyDialog
           rowData={currentRowData}
           handleVarietyChange={handleVarietyChange}
+          handleAddNewVariety={handleAddNewVariety}
           categoryId={categoryId}
           handleOpenDialog={handleOpenDialog}
         />

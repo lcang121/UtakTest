@@ -9,8 +9,10 @@ import { Box, Button, Typography, Divider } from "@mui/material";
 import emptyIcon from "./assets/empty state.png";
 import Masonry from "@mui/lab/Masonry";
 import fireDb from "./firebase";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function App() {
+  const matches = useMediaQuery("(min-width:1260px)");
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -61,7 +63,7 @@ function App() {
             </Box>
           ) : (
             <Box sx={{ paddingTop: "20px" }}>
-              <Masonry columns={1} spacing={1}>
+              <Masonry columns={matches ? 2 : 1} spacing={1}>
                 {Object.keys(data).map((id, i) => {
                   return (
                     <Box key={i}>

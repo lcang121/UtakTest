@@ -27,6 +27,10 @@ const DETAIL_COLS = [
     currencySetting: {
       currencyCode: "php",
     },
+    validate: (row) =>
+      (row.varietyPrice || "").length === 0
+        ? "This field can't be blank"
+        : true,
   },
   {
     field: "varietyCost",
@@ -35,11 +39,17 @@ const DETAIL_COLS = [
     currencySetting: {
       currencyCode: "php",
     },
+    validate: (row) =>
+      (row.varietyCost || "").length === 0 ? "This field can't be blank" : true,
   },
   {
     field: "varietyStocks",
     title: "Stocks",
     type: "numeric",
+    validate: (row) =>
+      (row.varietyStocks || "").length === 0
+        ? "This field can't be blank"
+        : true,
   },
 ];
 
@@ -47,8 +57,8 @@ const NewVarietyDialog = ({
   rowData,
   handleVarietyChange,
   handleOpenDialog,
+  handleAddNewVariety,
 }) => {
-  console.log(rowData);
   const addButtonRef = useRef();
   const [data, setData] = useState([]);
   const [open, setOpen] = React.useState(true);
@@ -58,10 +68,6 @@ const NewVarietyDialog = ({
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleSaveData = () => {
-    console.log(data);
   };
 
   const handleSubmit = (data, id) => {
@@ -218,7 +224,7 @@ const NewVarietyDialog = ({
       <DialogActions style={{ paddingRight: "25px" }}>
         <Button onClick={() => handleSubmit([], rowData.id)}>Cancel</Button>
         <Button
-          onClick={() => handleSubmit(data, rowData.id)}
+          onClick={() => handleAddNewVariety(data, rowData.id)}
           autoFocus
           variant="contained"
         >

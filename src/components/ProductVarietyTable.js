@@ -2,7 +2,7 @@ import MaterialTable, {
   MTableAction,
   MTableToolbar,
 } from "@material-table/core";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography, Paper } from "@mui/material";
 import React, { useState, useEffect, forwardRef, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import fireDb from "../firebase";
@@ -12,7 +12,7 @@ const DETAIL_COLS = [
     field: "varietyName",
     title: "Variety",
     validate: (row) =>
-      (row.varietyName || "").length === 0 ? "Product must have a name" : true,
+      (row.varietyName || "").length === 0 ? "Variety must have a name" : true,
   },
   {
     field: "varietyPrice",
@@ -38,11 +38,15 @@ const DETAIL_COLS = [
 ];
 
 const ProductVarietyTable = forwardRef(
-  ({ rowData, handleVarietyChange, categoryId, categoryData }, ref) => {
+  ({ rowData, handleVarietyChange, categoryId }, ref) => {
     const newRowData = rowData.rowData;
+
     const [data, setData] = useState([]);
     const [refreshTable, setRefreshTable] = useState();
-    const tableRef = useRef();
+    const addButtonRef = useRef();
+
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
 
     // useEffect(() => {
     //   if (typeof rowData.rowData.variety != "undefined") {
@@ -55,47 +59,89 @@ const ProductVarietyTable = forwardRef(
     //     setData(varietyArray);
     //   }
     // }, []);
+    <button onClick={forceUpdate}>Force re-render</button>;
 
     useEffect(() => {
-      if (typeof rowData.rowData.variety != "undefined") {
-        fireDb
-          .child(`Categories/${categoryId}/products/`)
-          .on("value", (snapshot) => {
-            if (snapshot.val() !== null) {
-              var updatedRowData = [...snapshot.val()];
-              const target = updatedRowData.find(
-                (el) => el.id === newRowData.id
-              );
-              setData(target.variety);
-              return;
-            } else {
-              setData([]);
-            }
-          });
-        return () => {
-          setData([]);
-        };
-      }
+      // if (typeof rowData.rowData.variety != "undefined") {
+      fireDb
+        .child(`Categories/${categoryId}/products/`)
+        .on("value", (snapshot) => {
+          if (snapshot.val() !== null) {
+            var updatedRowData = [...snapshot.val()];
+            const target = updatedRowData.find((el) => el.id === newRowData.id);
+            setData(target.variety);
+            return;
+          } else {
+            setData([]);
+          }
+        });
+      return () => {
+        setData([]);
+      };
+      // }
     }, []);
 
     return (
       <>
         {typeof rowData.rowData.variety != "undefined" ? (
-          <Box style={{ padding: "10px 10px 20px 50px" }}>
+          <Box
+            style={{
+              padding: "10px 10px 20px 50px",
+              backgroundColor: "#E4E7EC",
+            }}
+          >
             <MaterialTable
               style={{
-                backgroundColor: "aliceblue",
+                backgroundColor: "#E4E7EC",
               }}
               components={{
-                Toolbar: (props) => (
-                  <div
-                    style={{
-                      height: "0px",
-                    }}
-                  >
-                    <MTableToolbar {...props} />
-                  </div>
-                ),
+                // Toolbar: (props) => (
+                //   <div
+                //     style={{
+                //       height: "0px",
+                //     }}
+                //   >
+                //     <MTableToolbar {...props} />
+                //   </div>
+                // ),
+                // Action: (props) => {
+                //   if (
+                //     typeof props.action === typeof Function ||
+                //     props.action.tooltip !== "Add"
+                //   ) {
+                //     return <MTableAction {...props} />;
+                //   } else {
+                //     return <div ref={ref} onClick={props.action.onClick} />;
+                //   }
+                // },
+                Container: (props) => <Paper {...props} elevation={0} />,
+                Toolbar: (props) => {
+                  const propsCopy = { ...props };
+                  propsCopy.showTitle = false;
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection: "Row",
+                        alignItems: "Center",
+                      }}
+                    >
+                      <Typography variant="h5"></Typography>
+                      <Box sx={{ width: "0px", background: "red" }}>
+                        <MTableToolbar {...propsCopy} />
+                      </Box>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => addButtonRef.current.click()}
+                      >
+                        Add More
+                      </Button>
+                    </div>
+                  );
+                },
+
                 Action: (props) => {
                   if (
                     typeof props.action === typeof Function ||
@@ -103,17 +149,18 @@ const ProductVarietyTable = forwardRef(
                   ) {
                     return <MTableAction {...props} />;
                   } else {
-                    return <div ref={ref} onClick={props.action.onClick} />;
+                    return (
+                      <div ref={addButtonRef} onClick={props.action.onClick} />
+                    );
                   }
                 },
-                // Container: (props) => <Paper {...props} elevation={0} />,
               }}
               options={{
                 paging: false,
                 search: false,
                 showTitle: false,
                 actionsColumnIndex: -1,
-                headerStyle: { backgroundColor: "royalblue", color: "white" },
+                headerStyle: { backgroundColor: "#E4E7EC" },
               }}
               data={data}
               columns={DETAIL_COLS}
