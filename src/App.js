@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
-import BookContextProvider from "./context/ThemeWrapper";
+import ContextProvider from "./context/ThemeWrapper";
 import Container from "@mui/material/Container";
 import CategoryCard from "./components/CategoryCard";
 import { Box, Typography, Divider } from "@mui/material";
 import emptyIcon from "./assets/empty state.png";
-import Masonry from "@mui/lab/Masonry";
+// import Masonry from "@mui/lab/Masonry";
 import fireDb from "./firebase";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Masonry from "react-masonry-css";
+
+const breakpointColumnsObj = {
+  default: 2,
+  1250: 1,
+};
 
 function App() {
   const matches = useMediaQuery("(min-width:1260px)");
@@ -28,7 +34,7 @@ function App() {
 
   return (
     <div className="App">
-      <BookContextProvider>
+      <ContextProvider>
         <Container
           maxWidth="xl"
           style={{
@@ -66,7 +72,11 @@ function App() {
             </Box>
           ) : (
             <Box sx={{ paddingTop: "20px" }}>
-              <Masonry columns={matches ? 2 : 1} spacing={1}>
+              <Masonry
+                breakpointCols={breakpointColumnsObj}
+                className="my-masonry-grid"
+                columnClassName="my-masonry-grid_column"
+              >
                 {Object.keys(data).map((id, i) => {
                   return (
                     <Box key={i}>
@@ -78,7 +88,7 @@ function App() {
             </Box>
           )}
         </Container>
-      </BookContextProvider>
+      </ContextProvider>
     </div>
   );
 }

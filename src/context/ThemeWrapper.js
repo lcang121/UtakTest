@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-export const BookContext = createContext();
+export const AppContext = createContext();
 
 const theme = createTheme({
   typography: {
@@ -9,12 +9,12 @@ const theme = createTheme({
   },
 });
 
-const BookContextProvider = (props) => {
+const ContextProvider = (props) => {
   return (
     <ThemeProvider theme={theme}>
-      <BookContext.Provider value={{}}>{props.children}</BookContext.Provider>
+      <AppContext.Provider value={{}}>{props.children}</AppContext.Provider>
     </ThemeProvider>
   );
 };
 
-export default BookContextProvider;
+export default ContextProvider;
