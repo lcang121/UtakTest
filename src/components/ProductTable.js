@@ -54,7 +54,7 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
   };
 
   const checkIfUndefined = (data) => {
-    if (typeof data == "undefined") return true;
+    if (typeof data === "undefined") return true;
     else return false;
   };
 
@@ -70,17 +70,15 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
                   icon: () => <AddCircleIcon />,
                   tooltip: "Add Variety",
                   onClick: (event, rowData) => {
-                    {
-                      if (checkIfUndefined(rowData.variety) == false) {
-                        addActionRefChild.current.click();
-                      } else {
-                        new Promise((resolve, reject) => {
-                          setTimeout(() => {
-                            handleSetCurrentRowData(rowData);
-                            resolve(setOpenDialog(true));
-                          }, 100);
-                        });
-                      }
+                    if (checkIfUndefined(rowData.variety) === false) {
+                      addActionRefChild.current.click();
+                    } else {
+                      new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                          handleSetCurrentRowData(rowData);
+                          resolve(setOpenDialog(true));
+                        }, 100);
+                      });
                     }
                   },
                 },
@@ -141,8 +139,8 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
               currencyCode: "php",
             },
             cellStyle: (data, rowData) => {
-              if (checkIfUndefined(rowData) == false) {
-                if (checkIfUndefined(rowData.variety) == false) {
+              if (checkIfUndefined(rowData) === false) {
+                if (checkIfUndefined(rowData.variety) === false) {
                   return { color: "#D0D5DD" };
                 } else {
                   return { color: "black" };
@@ -158,8 +156,8 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
               currencyCode: "php",
             },
             cellStyle: (data, rowData) => {
-              if (checkIfUndefined(rowData) == false) {
-                if (checkIfUndefined(rowData.variety) == false) {
+              if (checkIfUndefined(rowData) === false) {
+                if (checkIfUndefined(rowData.variety) === false) {
                   return { color: "#D0D5DD" };
                 } else {
                   return { color: "black" };
@@ -172,8 +170,8 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
             title: "Stocks",
             type: "numeric",
             cellStyle: (data, rowData) => {
-              if (checkIfUndefined(rowData) == false) {
-                if (checkIfUndefined(rowData.variety) == false) {
+              if (checkIfUndefined(rowData) === false) {
+                if (checkIfUndefined(rowData.variety) === false) {
                   return { color: "#D0D5DD" };
                 } else {
                   return { color: "black" };
@@ -227,9 +225,9 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
         detailPanel={[
           (rowData) => ({
             icon:
-              checkIfUndefined(rowData.variety) == false ? null : () => null,
+              checkIfUndefined(rowData.variety) === false ? null : () => null,
             disabled:
-              checkIfUndefined(rowData.variety) == false ? null : () => null,
+              checkIfUndefined(rowData.variety) === false ? null : () => null,
             render: (rowData) => {
               return (
                 <ProductVarietyTable

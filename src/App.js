@@ -53,7 +53,12 @@ function App() {
             >
               <Typography variant="h5">There's nothing here yet.</Typography>
               <Box sx={{ padding: "30px" }}>
-                <img src={emptyIcon} width="150px" height="150px"></img>
+                <img
+                  src={emptyIcon}
+                  alt="empty state"
+                  width="150px"
+                  height="150px"
+                ></img>
               </Box>
               <Typography color="#757575">
                 Start by creating a new category!

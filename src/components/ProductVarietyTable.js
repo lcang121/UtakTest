@@ -42,7 +42,6 @@ const ProductVarietyTable = forwardRef(
     const newRowData = rowData.rowData;
 
     const [data, setData] = useState([]);
-    const [refreshTable, setRefreshTable] = useState();
     const addButtonRef = useRef();
 
     const [, updateState] = React.useState();
@@ -143,7 +142,6 @@ const ProductVarietyTable = forwardRef(
                       newData.id = uuidv4();
                       setData([...data, newData]);
                       handleVarietyChange([...data, newData], newRowData.id);
-                      setRefreshTable(Math.random());
                       resolve();
                     }, 100);
                   });

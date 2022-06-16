@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
-import { BookContext } from "../context/ThemeWrapper";
+import React from "react";
 import NewCategoryInput from "./NewCategoryInput";
 import { Box, Typography } from "@mui/material";
 
 const Navbar = () => {
-  const { books } = useContext(BookContext);
   return (
     <Box
       sx={{

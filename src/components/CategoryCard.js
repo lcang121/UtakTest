@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -50,11 +49,8 @@ const handleUpdateCategory = (categoryName, id, propsData) => {
 export default function CategoryCard(props) {
   const addActionRef = useRef();
   const categoryRef = useRef(null);
-  const {
-    MyRemoveCategory,
-    open,
-    setOpen: setRemoveCategoryDialog,
-  } = useRemoveCategory();
+  const { MyRemoveCategory, setOpen: setRemoveCategoryDialog } =
+    useRemoveCategory();
   const [expanded, setExpanded] = React.useState(true);
   const [isEditingMode, setIsEditingMode] = React.useState(false);
   const handleExpandClick = () => {

@@ -3,7 +3,7 @@ import MaterialTable, {
   MTableToolbar,
 } from "@material-table/core";
 import { Box, Button, Paper, Typography } from "@mui/material";
-import React, { useState, useEffect, forwardRef, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import Dialog from "@mui/material/Dialog";
