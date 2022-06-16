@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BookContext } from "../context/BookContext";
+import { BookContext } from "../context/ThemeWrapper";
 import NewCategoryInput from "./NewCategoryInput";
 import { Box, Typography } from "@mui/material";
 

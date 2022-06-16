@@ -5,13 +5,10 @@ import MaterialTable, {
 import { Box, Button, Paper, Typography } from "@mui/material";
 import React, { useState, useEffect, forwardRef, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import fireDb from "../firebase";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 
 const DETAIL_COLS = [
   {
@@ -54,77 +51,35 @@ const DETAIL_COLS = [
 ];
 
 const NewVarietyDialog = ({
+  openDialog,
   rowData,
-  handleVarietyChange,
-  handleOpenDialog,
   handleAddNewVariety,
+  handleCloseDialog,
 }) => {
   const addButtonRef = useRef();
   const [data, setData] = useState([]);
-  const [open, setOpen] = React.useState(true);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  console.log(rowData);
 
   const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = (data, id) => {
-    handleVarietyChange(data, id);
     setData([]);
-    setOpen(false);
+    handleCloseDialog();
   };
-  // useEffect(() => {
-  //   if (typeof rowData.rowData.variety != "undefined") {
-  //     console.log(typeof rowData.rowData.variety);
-  //     var varietyArray = [];
-  //     // console.log(Object.keys(rowData.rowData.products[0].).length);
-  //     Object.keys(rowData.rowData.variety).map((id, i) => {
-  //       return varietyArray.push(rowData.rowData.variety[id]);
-  //     });
-  //     setData(varietyArray);
-  //   }
-  // }, []);
 
-  // useEffect(() => {
-  //   if (typeof rowData.rowData.variety != "undefined") {
-  //     fireDb
-  //       .child(`Categories/${categoryId}/products/`)
-  //       .on("value", (snapshot) => {
-  //         if (snapshot.val() !== null) {
-  //           var updatedRowData = [...snapshot.val()];
-  //           const target = updatedRowData.find((el) => el.id === rowData.id);
-  //           setData(target.variety);
-  //         } else {
-  //           setData([]);
-  //         }
-  //       });
-  //     return () => {
-  //       setData([]);
-  //     };
-  //   }
-  // }, []);
+  const handleSubmit = () => {
+    console.log(data);
+    handleAddNewVariety(data, rowData.id);
+    handleClose();
+  };
 
   return (
     <Dialog
-      open={open}
-      onClose={() => handleSubmit([], rowData.id)}
+      open={openDialog}
+      onClose={() => handleClose()}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
       <DialogContent>
         <MaterialTable
-          // actions={[
-          //   {
-          //     icon: () => (
-
-          //     ),
-          //     tooltip: "Add new variety",
-          //     position: "toolbar",
-          //   },
-          // ]}
-          // title="Add Product Variety"
           components={{
             Toolbar: (props) => {
               const propsCopy = { ...props };
@@ -171,21 +126,17 @@ const NewVarietyDialog = ({
             search: false,
             showTitle: true,
             actionsColumnIndex: -1,
-            // headerStyle: { backgroundColor: "royalblue", color: "white" },
           }}
           data={data}
           columns={DETAIL_COLS}
           editable={{
-            onRowAddCancelled: (rowData) => console.log("Row adding cancelled"),
-            onRowUpdateCancelled: (rowData) =>
-              console.log("Row editing cancelled"),
             onRowAdd: (newData) => {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
                   newData.id = uuidv4();
                   setData([...data, newData]);
                   resolve();
-                }, 100);
+                }, 500);
               });
             },
             onRowUpdate: (newData, oldData) => {
@@ -200,7 +151,7 @@ const NewVarietyDialog = ({
 
                   setData([...dataUpdate]);
                   resolve();
-                }, 100);
+                }, 500);
               });
             },
             onRowDelete: (oldData) => {
@@ -215,19 +166,15 @@ const NewVarietyDialog = ({
                   setData([...dataDelete]);
 
                   resolve();
-                }, 100);
+                }, 500);
               });
             },
           }}
         />
       </DialogContent>
       <DialogActions style={{ paddingRight: "25px" }}>
-        <Button onClick={() => handleSubmit([], rowData.id)}>Cancel</Button>
-        <Button
-          onClick={() => handleAddNewVariety(data, rowData.id)}
-          autoFocus
-          variant="contained"
-        >
+        <Button onClick={() => handleClose()}>Cancel</Button>
+        <Button onClick={() => handleSubmit()} autoFocus variant="contained">
           Save
         </Button>
       </DialogActions>

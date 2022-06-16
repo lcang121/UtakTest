@@ -1,5 +1,4 @@
 import React, { createContext, useReducer } from "react";
-// import { bookReducer } from "../reducer/bookReducer";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
 export const BookContext = createContext();
@@ -11,7 +10,6 @@ const theme = createTheme({
 });
 
 const BookContextProvider = (props) => {
-  // const [books, dispatch] = useReducer(bookReducer, []);
   return (
     <ThemeProvider theme={theme}>
       <BookContext.Provider value={{}}>{props.children}</BookContext.Provider>

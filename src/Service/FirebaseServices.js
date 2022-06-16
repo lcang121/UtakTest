@@ -41,7 +41,6 @@ export const removeCategory = (id) => {
 };
 
 export const updateProduct = (productInfo, categoryId) => {
-  console.log("pasok!");
   return (
     fireDb.child(`Categories/${categoryId}/products/`).set(productInfo),
     (err) => {

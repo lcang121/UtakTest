@@ -48,17 +48,6 @@ const ProductVarietyTable = forwardRef(
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
 
-    // useEffect(() => {
-    //   if (typeof rowData.rowData.variety != "undefined") {
-    //     console.log(typeof rowData.rowData.variety);
-    //     var varietyArray = [];
-    //     // console.log(Object.keys(rowData.rowData.products[0].).length);
-    //     Object.keys(rowData.rowData.variety).map((id, i) => {
-    //       return varietyArray.push(rowData.rowData.variety[id]);
-    //     });
-    //     setData(varietyArray);
-    //   }
-    // }, []);
     <button onClick={forceUpdate}>Force re-render</button>;
 
     useEffect(() => {
@@ -87,33 +76,14 @@ const ProductVarietyTable = forwardRef(
           <Box
             style={{
               padding: "10px 10px 20px 50px",
-              backgroundColor: "#E4E7EC",
+              backgroundColor: "#F2F4F7",
             }}
           >
             <MaterialTable
               style={{
-                backgroundColor: "#E4E7EC",
+                backgroundColor: "#F2F4F7",
               }}
               components={{
-                // Toolbar: (props) => (
-                //   <div
-                //     style={{
-                //       height: "0px",
-                //     }}
-                //   >
-                //     <MTableToolbar {...props} />
-                //   </div>
-                // ),
-                // Action: (props) => {
-                //   if (
-                //     typeof props.action === typeof Function ||
-                //     props.action.tooltip !== "Add"
-                //   ) {
-                //     return <MTableAction {...props} />;
-                //   } else {
-                //     return <div ref={ref} onClick={props.action.onClick} />;
-                //   }
-                // },
                 Container: (props) => <Paper {...props} elevation={0} />,
                 Toolbar: (props) => {
                   const propsCopy = { ...props };
@@ -160,15 +130,11 @@ const ProductVarietyTable = forwardRef(
                 search: false,
                 showTitle: false,
                 actionsColumnIndex: -1,
-                headerStyle: { backgroundColor: "#E4E7EC" },
+                headerStyle: { backgroundColor: "#F2F4F7" },
               }}
               data={data}
               columns={DETAIL_COLS}
               editable={{
-                onRowAddCancelled: (rowData) =>
-                  console.log("Row adding cancelled"),
-                onRowUpdateCancelled: (rowData) =>
-                  console.log("Row editing cancelled"),
                 onRowAdd: (newData) => {
                   return new Promise((resolve, reject) => {
                     setTimeout(() => {
