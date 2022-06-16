@@ -65,7 +65,7 @@ const NewVarietyDialog = ({
   };
 
   const handleSubmit = () => {
-    handleVarietyChange(data, rowData.id);
+    if (data.length > 0) handleVarietyChange(data, rowData.id);
     handleClose();
   };
 

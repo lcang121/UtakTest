@@ -5,7 +5,6 @@ import Container from "@mui/material/Container";
 import CategoryCard from "./components/CategoryCard";
 import { Box, Typography, Divider } from "@mui/material";
 import emptyIcon from "./assets/empty state.png";
-// import Masonry from "@mui/lab/Masonry";
 import fireDb from "./firebase";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Masonry from "react-masonry-css";
