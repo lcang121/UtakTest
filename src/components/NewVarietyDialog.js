@@ -3,12 +3,13 @@ import MaterialTable, {
   MTableToolbar,
 } from "@material-table/core";
 import { Box, Button, Paper, Typography } from "@mui/material";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import AddIcon from "@mui/icons-material/Add";
 
 const DETAIL_COLS = [
   {
@@ -58,6 +59,11 @@ const NewVarietyDialog = ({
 }) => {
   const addButtonRef = useRef();
   const [data, setData] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  useEffect(() => {
+    data.length !== 0 ? setIsDisabled(false) : setIsDisabled(true);
+  }, [data]);
 
   const handleClose = () => {
     setData([]);
@@ -65,14 +71,14 @@ const NewVarietyDialog = ({
   };
 
   const handleSubmit = () => {
-    if (data.length > 0) handleVarietyChange(data, rowData.id);
+    handleVarietyChange(data, rowData.id);
     handleClose();
   };
 
   return (
     <Dialog
       open={openDialog}
-      onClose={() => handleClose()}
+      // onClose={() => handleClose()} // disabled for ux improvement
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -96,8 +102,10 @@ const NewVarietyDialog = ({
                     <MTableToolbar {...propsCopy} />
                   </Box>
                   <Button
+                    style={{ textTransform: "none" }}
                     variant="contained"
                     onClick={() => addButtonRef.current.click()}
+                    startIcon={<AddIcon />}
                   >
                     Add Variety
                   </Button>
@@ -134,7 +142,7 @@ const NewVarietyDialog = ({
                   newData.id = uuidv4();
                   setData([...data, newData]);
                   resolve();
-                }, 500);
+                }, 100);
               });
             },
             onRowUpdate: (newData, oldData) => {
@@ -149,7 +157,7 @@ const NewVarietyDialog = ({
 
                   setData([...dataUpdate]);
                   resolve();
-                }, 500);
+                }, 100);
               });
             },
             onRowDelete: (oldData) => {
@@ -164,7 +172,7 @@ const NewVarietyDialog = ({
                   setData([...dataDelete]);
 
                   resolve();
-                }, 500);
+                }, 100);
               });
             },
           }}
@@ -172,7 +180,12 @@ const NewVarietyDialog = ({
       </DialogContent>
       <DialogActions style={{ paddingRight: "25px" }}>
         <Button onClick={() => handleClose()}>Cancel</Button>
-        <Button onClick={() => handleSubmit()} autoFocus variant="contained">
+        <Button
+          disabled={isDisabled}
+          onClick={() => handleSubmit()}
+          autoFocus
+          variant="contained"
+        >
           Save
         </Button>
       </DialogActions>

@@ -60,7 +60,6 @@ export default function CategoryCard(props) {
     props.data.categoryName
   );
   const handleKeyPress = (e) => {
-    console.log(e.key);
     if (e.key === "Enter") {
       return true;
     } else return false;

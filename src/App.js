@@ -15,7 +15,6 @@ const breakpointColumnsObj = {
 };
 
 function App() {
-  const matches = useMediaQuery("(min-width:1260px)");
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -53,7 +52,6 @@ function App() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                // background: "red",
               }}
             >
               <Typography variant="h5">There's nothing here yet.</Typography>
