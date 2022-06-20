@@ -69,7 +69,7 @@ const ProductVarietyTable = forwardRef(
           setData([]);
         };
       }
-    }, []);
+    }, [categoryId, newRowData.id, rowData.rowData.variety]);
 
     return (
       <>

@@ -32,7 +32,7 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
           }
         });
     }
-  }, [categoryData]);
+  }, [categoryData, categoryId]);
 
   const handleVarietyChange = (varietyData, rowId) => {
     const dataUpdate = [...data];
@@ -226,8 +226,9 @@ const ProductTable = forwardRef(({ categoryData, categoryId }, ref) => {
           (rowData) => ({
             icon:
               checkIfUndefined(rowData.variety) === false ? null : () => null,
+            tooltip: "Show varieties",
             disabled:
-              checkIfUndefined(rowData.variety) === false ? null : () => null,
+              checkIfUndefined(rowData.variety) === false ? false : true,
             render: (rowData) => {
               return (
                 <ProductVarietyTable
